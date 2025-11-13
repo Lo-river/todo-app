@@ -1,0 +1,32 @@
+name: Test and Build React App
+
+on:
+  push:
+    branches:
+      - main        # kör CI när du pushar till main
+      - ci-cd       # extra branch om du vill testa CI separat
+  pull_request:
+    branches:
+      - ci-cd       # kör CI när någon gör PR mot ci-cd
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Klona repot
+        uses: actions/checkout@v3
+
+      - name: Installera Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installera beroenden
+        run: npm install
+
+      - name: Kör tester (Vitest)
+        run: npm run test -- --run
+
+      - name: Bygg projektet
+        run: npm run build
