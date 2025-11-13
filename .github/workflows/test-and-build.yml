@@ -1,32 +1,35 @@
-name: Test and Build React App
+name: CI - Test and Build Todo App
 
 on:
   push:
     branches:
-      - main        # kör CI när du pushar till main
-      - ci-cd       # extra branch om du vill testa CI separat
+      - main
+      #- ci-cd #- if i have extra branches
+
   pull_request:
     branches:
-      - ci-cd       # kör CI när någon gör PR mot ci-cd
+      - main
+     # - ci-cd # - if i have extra branches
+
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Klona repot
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Installera Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Installera beroenden
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Kör tester (Vitest)
+      - name: Run tests
         run: npm run test -- --run
 
-      - name: Bygg projektet
+      - name: Build app
         run: npm run build
